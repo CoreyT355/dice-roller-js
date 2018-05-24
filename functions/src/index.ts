@@ -16,6 +16,6 @@ export const rollDice = functions.https.onRequest(async (req, res) => {
     const rollParams = RollController.SplitWhatToRoll(requestBody.text);
     const result = RollController.rollDemBones(rollParams.numberOfDice, rollParams.typeOfDice, rollParams.diceModifier);
     slackRes.response_type = 'in_channel';
-    slackRes.text = `Your result is....${result}`;
+    slackRes.text = `Rolled ${requestBody.text}, and got...${result}`;
     res.status(200).send(slackRes);
 });
