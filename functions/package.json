@@ -7,13 +7,15 @@
     "debug": "npm run build && functions start && functions deploy rollDice --trigger-http && functions inspect rollDice",
     "shell": "npm run build && firebase functions:shell",
     "start": "npm run shell",
-    "deploy": "firebase deploy --only functions",
+    "deploy": "npm run build && firebase deploy --only functions",
     "logs": "firebase functions:log"
   },
   "main": "lib/index.js",
   "dependencies": {
+    "@types/lodash": "^4.14.109",
     "firebase-admin": "~5.12.1",
-    "firebase-functions": "^1.0.3"
+    "firebase-functions": "^1.0.3",
+    "lodash": "^4.17.10"
   },
   "devDependencies": {
     "tslint": "^5.8.0",

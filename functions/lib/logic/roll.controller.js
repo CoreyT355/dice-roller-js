@@ -1,31 +1,8 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const number_generator_controller_1 = require("./number-generator.controller");
+const _ = require("lodash");
 class RollController {
-    rollDemBones(numberOfDice, typeofDice, diceModifier) {
-        let rollResult = 0;
-        for (let index = 0; index < numberOfDice; index++) {
-            rollResult += number_generator_controller_1.Generator.GetNumberBetween(1, typeofDice);
-        }
-        rollResult += diceModifier || 0;
-        return rollResult;
-    }
-    SplitWhatToRoll(whatToRoll) {
-        const numberOfDice = parseInt(whatToRoll.split("d")[0]);
-        const typeOfDice = parseInt(whatToRoll.split("d")[1].split("+")[0]);
-        let diceModifier;
-        if (whatToRoll.indexOf('+') > -1) {
-            diceModifier = parseInt(whatToRoll.split("d")[1].split("+")[1]);
-        }
-        else if (whatToRoll.indexOf('-') > -1) {
-            diceModifier = -Math.abs(parseInt(whatToRoll.split("d")[1].split("-")[1]));
-        }
-        return {
-            numberOfDice: numberOfDice,
-            typeOfDice: typeOfDice,
-            diceModifier: isNaN(diceModifier) ? null : diceModifier
-        };
-    }
     validateDiceParams(numberOfDice, typeofDice, diceModifier, rulesConfig) {
         let validationResult = {
             isRollValid: true,
@@ -52,6 +29,34 @@ class RollController {
             return validationResult;
         }
         return validationResult;
+    }
+    SplitWhatToRoll(whatToRoll) {
+        const numberOfDice = parseInt(whatToRoll.split("d")[0]);
+        const typeOfDice = parseInt(whatToRoll.split("d")[1].split("+")[0]);
+        let diceModifier;
+        if (whatToRoll.indexOf('+') > -1) {
+            diceModifier = parseInt(whatToRoll.split("d")[1].split("+")[1]);
+        }
+        else if (whatToRoll.indexOf('-') > -1) {
+            diceModifier = -Math.abs(parseInt(whatToRoll.split("d")[1].split("-")[1]));
+        }
+        return {
+            numberOfDice: numberOfDice,
+            typeOfDice: typeOfDice,
+            diceModifier: isNaN(diceModifier) ? null : diceModifier
+        };
+    }
+    rollDemBones(numberOfDice, typeofDice) {
+        let rollResult = new Array();
+        for (let index = 0; index < numberOfDice; index++) {
+            rollResult.push(number_generator_controller_1.Generator.GetNumberBetween(1, typeofDice));
+        }
+        return rollResult;
+    }
+    buildResultMessage(rollResults, whatToRoll, diceModifier) {
+        let individualResults = `${rollResults.join(', ')}`;
+        let message = `Rolled ${whatToRoll}, and got...(${individualResults}) = ${_.sum(rollResults) + diceModifier}`;
+        return message;
     }
 }
 exports.RollController = RollController;
