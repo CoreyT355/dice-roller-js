@@ -31,9 +31,9 @@ exports.rollDice = functions.https.onRequest((req, res) => __awaiter(this, void 
         slackRes.text = validationResult.invalidRollMessage;
         res.status(200).send(slackRes);
     }
-    const result = rollController.rollDemBones(rollParams.numberOfDice, rollParams.typeOfDice, rollParams.diceModifier);
+    const result = rollController.rollDemBones(rollParams.numberOfDice, rollParams.typeOfDice);
     slackRes.response_type = 'in_channel';
-    slackRes.text = `Rolled ${requestBody.text}, and got...${result}`;
+    slackRes.text = rollController.buildResultMessage(result, requestBody.text, rollParams.diceModifier);
     res.status(200).send(slackRes);
 }));
 //# sourceMappingURL=index.js.map

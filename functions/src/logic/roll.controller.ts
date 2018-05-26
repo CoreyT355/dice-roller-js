@@ -1,32 +1,7 @@
 import { Generator } from "./number-generator.controller";
+import * as _ from 'lodash';
+
 export class RollController {
-  public rollDemBones(
-    numberOfDice: number,
-    typeofDice: number,
-    diceModifier: number
-  ): number {
-    let rollResult = 0;
-    for (let index = 0; index < numberOfDice; index++) {
-      rollResult += Generator.GetNumberBetween(1, typeofDice);
-    }
-    rollResult += diceModifier || 0;
-    return rollResult;
-  }
-  public SplitWhatToRoll(whatToRoll: string): any {
-    const numberOfDice = parseInt(whatToRoll.split("d")[0]);
-    const typeOfDice = parseInt(whatToRoll.split("d")[1].split("+")[0]);
-    let diceModifier: number;
-    if (whatToRoll.indexOf('+') > -1) {
-      diceModifier = parseInt(whatToRoll.split("d")[1].split("+")[1]);
-    } else if (whatToRoll.indexOf('-') > -1) {
-      diceModifier = -Math.abs(parseInt(whatToRoll.split("d")[1].split("-")[1]));
-    }
-    return {
-      numberOfDice: numberOfDice,
-      typeOfDice: typeOfDice,
-      diceModifier: isNaN(diceModifier) ? null : diceModifier
-    };
-  }
   public validateDiceParams(
     numberOfDice: number,
     typeofDice: number,
@@ -59,5 +34,35 @@ export class RollController {
       return validationResult;
     }
     return validationResult;
+  }
+  public SplitWhatToRoll(whatToRoll: string): any {
+    const numberOfDice = parseInt(whatToRoll.split("d")[0]);
+    const typeOfDice = parseInt(whatToRoll.split("d")[1].split("+")[0]);
+    let diceModifier: number;
+    if (whatToRoll.indexOf('+') > -1) {
+      diceModifier = parseInt(whatToRoll.split("d")[1].split("+")[1]);
+    } else if (whatToRoll.indexOf('-') > -1) {
+      diceModifier = -Math.abs(parseInt(whatToRoll.split("d")[1].split("-")[1]));
+    }
+    return {
+      numberOfDice: numberOfDice,
+      typeOfDice: typeOfDice,
+      diceModifier: isNaN(diceModifier) ? null : diceModifier
+    };
+  }
+  public rollDemBones(
+    numberOfDice: number,
+    typeofDice: number
+  ): number[] {
+    let rollResult = new Array<number>();
+    for (let index = 0; index < numberOfDice; index++) {
+      rollResult.push(Generator.GetNumberBetween(1, typeofDice));
+    }
+    return rollResult;
+  }
+  public buildResultMessage(rollResults: number[], whatToRoll: string, diceModifier: number) {
+    let individualResults = `${rollResults.join(', ')}`;
+    let message = `Rolled ${whatToRoll}, and got...(${individualResults}) = ${_.sum(rollResults) + diceModifier}`;
+    return message;
   }
 }
