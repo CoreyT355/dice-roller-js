@@ -1,3 +1,5 @@
+[![CodeFactor](https://www.codefactor.io/repository/github/coreyt355/dice-roller-js/badge/master)](https://www.codefactor.io/repository/github/coreyt355/dice-roller-js/overview/master)
+
 # DiceRollerJS
 
 Simple dice roller built as a Firebase Function. 
