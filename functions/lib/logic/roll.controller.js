@@ -14,11 +14,10 @@ class RollController {
         if (diceModifier > rulesConfig.maxDiceModifier) {
             return new validation_result_model_1.ValidationResult(false, `${diceModifier} is too damn high.`);
         }
-        else if (diceModifier < -Math.abs(rulesConfig.maxDiceModifier)) {
+        if (diceModifier < -Math.abs(rulesConfig.maxDiceModifier)) {
             return new validation_result_model_1.ValidationResult(false, `${diceModifier} is too damn low.`);
         }
         return new validation_result_model_1.ValidationResult(true, ``);
-        ;
     }
     static SplitWhatToRoll(whatToRoll) {
         const numberOfDice = parseInt(whatToRoll.split("d")[0]);

@@ -17,7 +17,8 @@ export class RollController {
     }
     if (diceModifier > rulesConfig.maxDiceModifier) {
         return new ValidationResult(false, `${diceModifier} is too damn high.`);
-    } else if (diceModifier < -Math.abs(rulesConfig.maxDiceModifier)) {
+    } 
+    if (diceModifier < -Math.abs(rulesConfig.maxDiceModifier)) {
       return new ValidationResult(false, `${diceModifier} is too damn low.`);
     }
     return new ValidationResult(true, ``);
