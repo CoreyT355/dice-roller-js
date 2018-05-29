@@ -40,5 +40,5 @@ export const rollStat = functions.https.onRequest(async (req, res) => {
         slackRes.text = `Auth Failed: broken token`;
         return res.status(418).send(slackRes);
     }
-    return res.status(200).send({ message: 'Valid' });
+    return res.status(200).send({ message: 'not implemented yet' });
 });
