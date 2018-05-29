@@ -4,11 +4,11 @@ const number_generator_controller_1 = require("./number-generator.controller");
 const _ = require("lodash");
 class RollController {
     validateDiceParams(numberOfDice, typeofDice, diceModifier, rulesConfig) {
-        let validationResult = {
+        const validationResult = {
             isRollValid: true,
             invalidRollMessage: ''
         };
-        if (rulesConfig.allowedTypesOfDice.indexOf(typeofDice) == -1) {
+        if (rulesConfig.allowedTypesOfDice.indexOf(typeofDice) === -1) {
             validationResult.isRollValid = false;
             validationResult.invalidRollMessage = `${typeofDice} is not a valid die.`;
             return validationResult;
@@ -47,15 +47,15 @@ class RollController {
         };
     }
     rollDemBones(numberOfDice, typeofDice) {
-        let rollResult = new Array();
+        const rollResult = new Array();
         for (let index = 0; index < numberOfDice; index++) {
             rollResult.push(number_generator_controller_1.Generator.GetNumberBetween(1, typeofDice));
         }
         return rollResult;
     }
     buildResultMessage(rollResults, whatToRoll, diceModifier) {
-        let individualResults = `${rollResults.join(', ')}`;
-        let message = `Rolled ${whatToRoll}, and got...(${individualResults}) = ${_.sum(rollResults) + diceModifier}`;
+        const individualResults = `${rollResults.join(', ')}`;
+        const message = `Rolled ${whatToRoll}, and got...(${individualResults}) = ${_.sum(rollResults) + diceModifier}`;
         return message;
     }
 }

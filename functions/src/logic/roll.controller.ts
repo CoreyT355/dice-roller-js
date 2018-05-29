@@ -9,11 +9,11 @@ export class RollController {
     rulesConfig: any
   ) {
     
-    let validationResult = {
+    const validationResult = {
         isRollValid: true,
         invalidRollMessage: ''
     };
-    if (rulesConfig.allowedTypesOfDice.indexOf(typeofDice) == -1) {
+    if (rulesConfig.allowedTypesOfDice.indexOf(typeofDice) === -1) {
         validationResult.isRollValid = false;
         validationResult.invalidRollMessage = `${typeofDice} is not a valid die.`;
         return validationResult;
@@ -54,15 +54,15 @@ export class RollController {
     numberOfDice: number,
     typeofDice: number
   ): number[] {
-    let rollResult = new Array<number>();
+    const rollResult = new Array<number>();
     for (let index = 0; index < numberOfDice; index++) {
       rollResult.push(Generator.GetNumberBetween(1, typeofDice));
     }
     return rollResult;
   }
   public buildResultMessage(rollResults: number[], whatToRoll: string, diceModifier: number) {
-    let individualResults = `${rollResults.join(', ')}`;
-    let message = `Rolled ${whatToRoll}, and got...(${individualResults}) = ${_.sum(rollResults) + diceModifier}`;
+    const individualResults = `${rollResults.join(', ')}`;
+    const message = `Rolled ${whatToRoll}, and got...(${individualResults}) = ${_.sum(rollResults) + diceModifier}`;
     return message;
   }
 }

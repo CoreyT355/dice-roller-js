@@ -22,19 +22,19 @@ exports.rollDice = functions.https.onRequest((req, res) => __awaiter(this, void 
     if (!allowedTokens.find(token => { return token === requestBody.token; })) {
         slackRes.response_type = 'ephemeral';
         slackRes.text = `Auth Failed: broken token`;
-        res.status(418).send(slackRes);
+        return res.status(418).send(slackRes);
     }
     const rollParams = rollController.SplitWhatToRoll(requestBody.text);
-    let validationResult = rollController.validateDiceParams(rollParams.numberOfDice, rollParams.typeOfDice, rollParams.diceModifier, lame_config_1.Config.rollRules);
+    const validationResult = rollController.validateDiceParams(rollParams.numberOfDice, rollParams.typeOfDice, rollParams.diceModifier, lame_config_1.Config.rollRules);
     if (validationResult.isRollValid === false) {
         slackRes.response_type = 'ephemeral';
         slackRes.text = validationResult.invalidRollMessage;
-        res.status(200).send(slackRes);
+        return res.status(200).send(slackRes);
     }
     const result = rollController.rollDemBones(rollParams.numberOfDice, rollParams.typeOfDice);
     slackRes.response_type = 'in_channel';
     slackRes.text = rollController.buildResultMessage(result, requestBody.text, rollParams.diceModifier);
-    res.status(200).send(slackRes);
+    return res.status(200).send(slackRes);
 }));
 exports.rollStat = functions.https.onRequest((req, res) => __awaiter(this, void 0, void 0, function* () {
     const requestBody = req.body;
@@ -46,8 +46,8 @@ exports.rollStat = functions.https.onRequest((req, res) => __awaiter(this, void 
     if (!allowedTokens.find(token => { return token === requestBody.token; })) {
         slackRes.response_type = 'ephemeral';
         slackRes.text = `Auth Failed: broken token`;
-        res.status(418).send(slackRes);
+        return res.status(418).send(slackRes);
     }
-    res.status(200).send({ message: 'Valid' });
+    return res.status(200).send({ message: 'Valid' });
 }));
 //# sourceMappingURL=index.js.map
