@@ -15,7 +15,6 @@ const lame_config_1 = require("./lame.config");
 exports.rollDice = functions.https.onRequest((req, res) => __awaiter(this, void 0, void 0, function* () {
     const requestBody = req.body;
     const slackRes = new Slack.Response();
-    const rollController = new roll_controller_1.RollController();
     const allowedTokens = [
         "uTzgipm2SXe415vtiVH4gbUz"
     ];
@@ -24,22 +23,21 @@ exports.rollDice = functions.https.onRequest((req, res) => __awaiter(this, void 
         slackRes.text = `Auth Failed: broken token`;
         return res.status(418).send(slackRes);
     }
-    const rollParams = rollController.SplitWhatToRoll(requestBody.text);
-    const validationResult = rollController.validateDiceParams(rollParams.numberOfDice, rollParams.typeOfDice, rollParams.diceModifier, lame_config_1.Config.rollRules);
+    const rollParams = roll_controller_1.RollController.SplitWhatToRoll(requestBody.text);
+    const validationResult = roll_controller_1.RollController.validateDiceParams(rollParams.numberOfDice, rollParams.typeOfDice, rollParams.diceModifier, lame_config_1.Config.rollRules);
     if (validationResult.isRollValid === false) {
         slackRes.response_type = 'ephemeral';
         slackRes.text = validationResult.invalidRollMessage;
         return res.status(200).send(slackRes);
     }
-    const result = rollController.rollDemBones(rollParams.numberOfDice, rollParams.typeOfDice);
+    const result = roll_controller_1.RollController.rollDemBones(rollParams.numberOfDice, rollParams.typeOfDice);
     slackRes.response_type = 'in_channel';
-    slackRes.text = rollController.buildResultMessage(result, requestBody.text, rollParams.diceModifier);
+    slackRes.text = roll_controller_1.RollController.buildResultMessage(result, requestBody.text, rollParams.diceModifier);
     return res.status(200).send(slackRes);
 }));
 exports.rollStat = functions.https.onRequest((req, res) => __awaiter(this, void 0, void 0, function* () {
     const requestBody = req.body;
     const slackRes = new Slack.Response();
-    const rollController = new roll_controller_1.RollController();
     const allowedTokens = [
         "uTzgipm2SXe415vtiVH4gbUz"
     ];
@@ -48,6 +46,6 @@ exports.rollStat = functions.https.onRequest((req, res) => __awaiter(this, void 
         slackRes.text = `Auth Failed: broken token`;
         return res.status(418).send(slackRes);
     }
-    return res.status(200).send({ message: 'Valid' });
+    return res.status(200).send({ message: 'not implemented yet' });
 }));
 //# sourceMappingURL=index.js.map

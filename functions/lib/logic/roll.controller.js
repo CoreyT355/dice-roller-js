@@ -3,7 +3,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const number_generator_controller_1 = require("./number-generator.controller");
 const _ = require("lodash");
 class RollController {
-    validateDiceParams(numberOfDice, typeofDice, diceModifier, rulesConfig) {
+    static validateDiceParams(numberOfDice, typeofDice, diceModifier, rulesConfig) {
         const validationResult = {
             isRollValid: true,
             invalidRollMessage: ''
@@ -30,7 +30,7 @@ class RollController {
         }
         return validationResult;
     }
-    SplitWhatToRoll(whatToRoll) {
+    static SplitWhatToRoll(whatToRoll) {
         const numberOfDice = parseInt(whatToRoll.split("d")[0]);
         const typeOfDice = parseInt(whatToRoll.split("d")[1].split("+")[0]);
         let diceModifier;
@@ -46,14 +46,14 @@ class RollController {
             diceModifier: isNaN(diceModifier) ? null : diceModifier
         };
     }
-    rollDemBones(numberOfDice, typeofDice) {
+    static rollDemBones(numberOfDice, typeofDice) {
         const rollResult = new Array();
         for (let index = 0; index < numberOfDice; index++) {
             rollResult.push(number_generator_controller_1.Generator.GetNumberBetween(1, typeofDice));
         }
         return rollResult;
     }
-    buildResultMessage(rollResults, whatToRoll, diceModifier) {
+    static buildResultMessage(rollResults, whatToRoll, diceModifier) {
         const individualResults = `${rollResults.join(', ')}`;
         const message = `Rolled ${whatToRoll}, and got...(${individualResults}) = ${_.sum(rollResults) + diceModifier}`;
         return message;

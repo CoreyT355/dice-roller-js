@@ -2,7 +2,7 @@ import { Generator } from "./number-generator.controller";
 import * as _ from 'lodash';
 
 export class RollController {
-  public validateDiceParams(
+  public static validateDiceParams(
     numberOfDice: number,
     typeofDice: number,
     diceModifier: number,
@@ -35,7 +35,7 @@ export class RollController {
     }
     return validationResult;
   }
-  public SplitWhatToRoll(whatToRoll: string): any {
+  public static SplitWhatToRoll(whatToRoll: string): any {
     const numberOfDice = parseInt(whatToRoll.split("d")[0]);
     const typeOfDice = parseInt(whatToRoll.split("d")[1].split("+")[0]);
     let diceModifier: number;
@@ -50,7 +50,7 @@ export class RollController {
       diceModifier: isNaN(diceModifier) ? null : diceModifier
     };
   }
-  public rollDemBones(
+  public static rollDemBones(
     numberOfDice: number,
     typeofDice: number
   ): number[] {
@@ -60,7 +60,7 @@ export class RollController {
     }
     return rollResult;
   }
-  public buildResultMessage(rollResults: number[], whatToRoll: string, diceModifier: number) {
+  public static buildResultMessage(rollResults: number[], whatToRoll: string, diceModifier: number) {
     const individualResults = `${rollResults.join(', ')}`;
     const message = `Rolled ${whatToRoll}, and got...(${individualResults}) = ${_.sum(rollResults) + diceModifier}`;
     return message;
