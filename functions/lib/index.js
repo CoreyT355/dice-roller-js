@@ -12,12 +12,12 @@ const functions = require("firebase-functions");
 const Slack = require("./models/slack.model");
 const roll_controller_1 = require("./logic/roll.controller");
 const lame_config_1 = require("./lame.config");
+const slackRes = new Slack.Response();
+const allowedTokens = [
+    "uTzgipm2SXe415vtiVH4gbUz"
+];
 exports.rollDice = functions.https.onRequest((req, res) => __awaiter(this, void 0, void 0, function* () {
     const requestBody = req.body;
-    const slackRes = new Slack.Response();
-    const allowedTokens = [
-        "uTzgipm2SXe415vtiVH4gbUz"
-    ];
     if (!allowedTokens.find(token => { return token === requestBody.token; })) {
         slackRes.response_type = 'ephemeral';
         slackRes.text = `Auth Failed: broken token`;
@@ -37,10 +37,6 @@ exports.rollDice = functions.https.onRequest((req, res) => __awaiter(this, void 
 }));
 exports.rollStat = functions.https.onRequest((req, res) => __awaiter(this, void 0, void 0, function* () {
     const requestBody = req.body;
-    const slackRes = new Slack.Response();
-    const allowedTokens = [
-        "uTzgipm2SXe415vtiVH4gbUz"
-    ];
     if (!allowedTokens.find(token => { return token === requestBody.token; })) {
         slackRes.response_type = 'ephemeral';
         slackRes.text = `Auth Failed: broken token`;

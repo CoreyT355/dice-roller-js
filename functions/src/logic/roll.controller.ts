@@ -1,4 +1,5 @@
 import { Generator } from "./number-generator.controller";
+import { ValidationResult } from "../models/validation-result.model";
 import * as _ from 'lodash';
 
 export class RollController {
@@ -8,32 +9,18 @@ export class RollController {
     diceModifier: number,
     rulesConfig: any
   ) {
-    
-    const validationResult = {
-        isRollValid: true,
-        invalidRollMessage: ''
-    };
     if (rulesConfig.allowedTypesOfDice.indexOf(typeofDice) === -1) {
-        validationResult.isRollValid = false;
-        validationResult.invalidRollMessage = `${typeofDice} is not a valid die.`;
-        return validationResult;
+        return new ValidationResult(false, `${typeofDice} is not a valid die.`);
     }
     if (numberOfDice > rulesConfig.maxNumberOfDice) {
-        validationResult.isRollValid = false;
-        validationResult.invalidRollMessage = `You can only roll ${rulesConfig.maxNumberOfDice} at a time.`;
-        return validationResult;
+        return new ValidationResult(false, `You can only roll ${rulesConfig.maxNumberOfDice} at a time.`);
     }
-    
     if (diceModifier > rulesConfig.maxDiceModifier) {
-        validationResult.isRollValid = false;
-        validationResult.invalidRollMessage = `${diceModifier} is too damn high.`;
-        return validationResult;
+        return new ValidationResult(false, `${diceModifier} is too damn high.`);
     } else if (diceModifier < -Math.abs(rulesConfig.maxDiceModifier)) {
-      validationResult.isRollValid = false;
-      validationResult.invalidRollMessage = `${diceModifier} is too damn low.`;
-      return validationResult;
+      return new ValidationResult(false, `${diceModifier} is too damn low.`);
     }
-    return validationResult;
+    return new ValidationResult(true, ``);;
   }
   public static SplitWhatToRoll(whatToRoll: string): any {
     const numberOfDice = parseInt(whatToRoll.split("d")[0]);
@@ -61,8 +48,6 @@ export class RollController {
     return rollResult;
   }
   public static buildResultMessage(rollResults: number[], whatToRoll: string, diceModifier: number) {
-    const individualResults = `${rollResults.join(', ')}`;
-    const message = `Rolled ${whatToRoll}, and got...(${individualResults}) = ${_.sum(rollResults) + diceModifier}`;
-    return message;
+    return `Rolled ${whatToRoll}, and got...(${rollResults.join(', ')}) = ${_.sum(rollResults) + diceModifier}`;
   }
 }
