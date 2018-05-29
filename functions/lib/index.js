@@ -36,4 +36,18 @@ exports.rollDice = functions.https.onRequest((req, res) => __awaiter(this, void 
     slackRes.text = rollController.buildResultMessage(result, requestBody.text, rollParams.diceModifier);
     res.status(200).send(slackRes);
 }));
+exports.rollStat = functions.https.onRequest((req, res) => __awaiter(this, void 0, void 0, function* () {
+    const requestBody = req.body;
+    const slackRes = new Slack.Response();
+    const rollController = new roll_controller_1.RollController();
+    const allowedTokens = [
+        "uTzgipm2SXe415vtiVH4gbUz"
+    ];
+    if (!allowedTokens.find(token => { return token === requestBody.token; })) {
+        slackRes.response_type = 'ephemeral';
+        slackRes.text = `Auth Failed: broken token`;
+        res.status(418).send(slackRes);
+    }
+    res.status(200).send({ message: 'Valid' });
+}));
 //# sourceMappingURL=index.js.map
