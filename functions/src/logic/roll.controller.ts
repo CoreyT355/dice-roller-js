@@ -20,7 +20,7 @@ export class RollController {
     } else if (diceModifier < -Math.abs(rulesConfig.maxDiceModifier)) {
       return new ValidationResult(false, `${diceModifier} is too damn low.`);
     }
-    return new ValidationResult(true, ``);;
+    return new ValidationResult(true, ``);
   }
   public static SplitWhatToRoll(whatToRoll: string): any {
     const numberOfDice = parseInt(whatToRoll.split("d")[0]);
