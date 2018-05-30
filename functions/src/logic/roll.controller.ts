@@ -1,5 +1,7 @@
 import { Generator } from "./number-generator.controller";
 import { ValidationResult } from "../models/validation-result.model";
+import * as SlackResponse from "../models/slack.model";
+
 import * as _ from 'lodash';
 
 export class RollController {
@@ -48,7 +50,23 @@ export class RollController {
     }
     return rollResult;
   }
-  public static buildResultMessage(rollResults: number[], whatToRoll: string, diceModifier: number) {
-    return `Rolled ${whatToRoll}, and got...(${rollResults.join(', ')}) = ${_.sum(rollResults) + diceModifier}`;
+  public static buildResultMessage(responseToSlack: SlackResponse.Response, rollResults: number[], whatToRoll: string, diceModifier: number) {
+    let critMessage = '';
+    let critColor = '';
+    if (whatToRoll.indexOf('d20') > -1) {
+      if (_.find(rollResults, roll => roll === 1)) {
+        critMessage = 'Oh no! Crit fail!';
+        critColor = 'danger';
+      } else if (_.find(rollResults, roll => roll === 20)) {
+        critMessage = 'Hell yeah! Critical hit!';
+        critColor = 'good';
+      }
+    }
+    responseToSlack.response_type = 'in_channel';
+    responseToSlack.text = `Rolled ${whatToRoll}, and got...(${rollResults.join(', ')}) = ${_.sum(rollResults) + diceModifier}`;
+    if (critMessage !== null) {
+      responseToSlack.attachments = new Array<SlackResponse.Attachment>(new SlackResponse.Attachment(critColor, critMessage));
+    }
+    return responseToSlack;
   }
 }

@@ -5,17 +5,17 @@ export class Response {
 
     constructor() {
         this.response_type = 'in_channel';
-        this.attachments = new Array<Attachment>();
     }
 }
 
 export class Attachment {
     color: string;
+    text:  string;
     fields: Fields[];
-
-    constructor() {
-        this.fields = new Array<Fields>();
-        this.color = 'good';
+    constructor(color: string, text: string, fields: Array<Fields> = null) {
+        this.color = color;
+        this.text = text;
+        this.fields = fields;
     }
 }
 

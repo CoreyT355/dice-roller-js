@@ -31,9 +31,7 @@ exports.rollDice = functions.https.onRequest((req, res) => __awaiter(this, void 
         return res.status(200).send(slackRes);
     }
     const result = roll_controller_1.RollController.rollDemBones(rollParams.numberOfDice, rollParams.typeOfDice);
-    slackRes.response_type = 'in_channel';
-    slackRes.text = roll_controller_1.RollController.buildResultMessage(result, requestBody.text, rollParams.diceModifier);
-    return res.status(200).send(slackRes);
+    return res.status(200).send(roll_controller_1.RollController.buildResultMessage(slackRes, result, requestBody.text, rollParams.diceModifier));
 }));
 exports.rollStat = functions.https.onRequest((req, res) => __awaiter(this, void 0, void 0, function* () {
     const requestBody = req.body;

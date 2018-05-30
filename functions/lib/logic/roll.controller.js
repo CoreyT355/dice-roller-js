@@ -2,6 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 const number_generator_controller_1 = require("./number-generator.controller");
 const validation_result_model_1 = require("../models/validation-result.model");
+const SlackResponse = require("../models/slack.model");
 const _ = require("lodash");
 class RollController {
     static validateDiceParams(numberOfDice, typeofDice, diceModifier, rulesConfig) {
@@ -42,8 +43,25 @@ class RollController {
         }
         return rollResult;
     }
-    static buildResultMessage(rollResults, whatToRoll, diceModifier) {
-        return `Rolled ${whatToRoll}, and got...(${rollResults.join(', ')}) = ${_.sum(rollResults) + diceModifier}`;
+    static buildResultMessage(responseToSlack, rollResults, whatToRoll, diceModifier) {
+        let critMessage = '';
+        let critColor = '';
+        if (whatToRoll.indexOf('d20') > -1) {
+            if (_.find(rollResults, roll => roll === 1)) {
+                critMessage = 'Oh no! Crit fail!';
+                critColor = 'danger';
+            }
+            else if (_.find(rollResults, roll => roll === 20)) {
+                critMessage = 'Hell yeah! Critical hit!';
+                critColor = 'good';
+            }
+        }
+        responseToSlack.response_type = 'in_channel';
+        responseToSlack.text = `Rolled ${whatToRoll}, and got...(${rollResults.join(', ')}) = ${_.sum(rollResults) + diceModifier}`;
+        if (critMessage !== null) {
+            responseToSlack.attachments = new Array(new SlackResponse.Attachment(critColor, critMessage));
+        }
+        return responseToSlack;
     }
 }
 exports.RollController = RollController;
