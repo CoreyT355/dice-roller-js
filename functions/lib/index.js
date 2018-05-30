@@ -10,6 +10,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 const functions = require("firebase-functions");
 const Slack = require("./models/slack.model");
+const _ = require("lodash");
 const roll_controller_1 = require("./logic/roll.controller");
 const lame_config_1 = require("./lame.config");
 const slackRes = new Slack.Response();
@@ -22,6 +23,12 @@ exports.rollDice = functions.https.onRequest((req, res) => __awaiter(this, void 
         slackRes.response_type = 'ephemeral';
         slackRes.text = `Auth Failed: broken token`;
         return res.status(418).send(slackRes);
+    }
+    if (requestBody.text.includes('advantage')) {
+        const diceModifier = requestBody.text.split('+')[1];
+        const rollResult = roll_controller_1.RollController.rollAdvantage();
+        const highRoll = _.max(rollResult);
+        const advantageResult = highRoll + diceModifier;
     }
     const rollParams = roll_controller_1.RollController.SplitWhatToRoll(requestBody.text);
     const validationResult = roll_controller_1.RollController.validateDiceParams(rollParams.numberOfDice, rollParams.typeOfDice, rollParams.diceModifier, lame_config_1.Config.rollRules);

@@ -1,5 +1,6 @@
 import * as functions from 'firebase-functions';
 import * as Slack from './models/slack.model';
+import * as _ from "lodash";
 import { RollController } from './logic/roll.controller';
 import { Config } from "./lame.config";
 
@@ -14,6 +15,12 @@ export const rollDice = functions.https.onRequest(async (req, res) => {
         slackRes.response_type = 'ephemeral';
         slackRes.text = `Auth Failed: broken token`;
         return res.status(418).send(slackRes);
+    }
+    if (requestBody.text.includes('advantage')) {
+        const diceModifier = requestBody.text.split('+')[1];
+        const rollResult = RollController.rollAdvantage();
+        const highRoll = _.max(rollResult);
+        const advantageResult = highRoll + diceModifier;
     }
     const rollParams = RollController.SplitWhatToRoll(requestBody.text);
     const validationResult = RollController.validateDiceParams(rollParams.numberOfDice, rollParams.typeOfDice, rollParams.diceModifier, Config.rollRules);

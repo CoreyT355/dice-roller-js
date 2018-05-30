@@ -36,6 +36,9 @@ class RollController {
             diceModifier: isNaN(diceModifier) ? null : diceModifier
         };
     }
+    static rollAdvantage() {
+        return this.rollDemBones(2, 20);
+    }
     static rollDemBones(numberOfDice, typeofDice) {
         const rollResult = new Array();
         for (let index = 0; index < numberOfDice; index++) {

@@ -40,6 +40,9 @@ export class RollController {
       diceModifier: isNaN(diceModifier) ? null : diceModifier
     };
   }
+  public static rollAdvantage() {
+    return this.rollDemBones(2, 20);
+  }
   public static rollDemBones(
     numberOfDice: number,
     typeofDice: number
