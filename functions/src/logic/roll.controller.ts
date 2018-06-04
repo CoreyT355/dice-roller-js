@@ -72,4 +72,42 @@ export class RollController {
     }
     return responseToSlack;
   }
+  public static buildAdvantageResultMessage(responseToSlack: SlackResponse.Response, rollResults: number[], diceModifier: number) {
+    let critMessage = '';
+    let critColor = '';
+    if (rollResults.indexOf(20) > -1) {
+      if (_.find(rollResults, roll => roll === 1)) {
+        critMessage = 'Oh no! Crit fail!';
+        critColor = 'danger';
+      } else if (_.find(rollResults, roll => roll === 20)) {
+        critMessage = 'Hell yeah! Critical hit!';
+        critColor = 'good';
+      }
+    }
+    responseToSlack.response_type = 'in_channel';
+    responseToSlack.text = `Rolled with advantage, and got...(${rollResults.join(', ')}) = ${_.max(rollResults) + diceModifier}`;
+    if (critMessage !== null) {
+      responseToSlack.attachments = new Array<SlackResponse.Attachment>(new SlackResponse.Attachment(critColor, critMessage));
+    }
+    return responseToSlack;
+  }
+  public static buildDisadvantageResultMessage(responseToSlack: SlackResponse.Response, rollResults: number[], diceModifier: number) {
+    let critMessage = '';
+    let critColor = '';
+    if (rollResults.indexOf(20) > -1) {
+      if (_.find(rollResults, roll => roll === 1)) {
+        critMessage = 'Oh no! Crit fail!';
+        critColor = 'danger';
+      } else if (_.find(rollResults, roll => roll === 20)) {
+        critMessage = 'Hell yeah! Critical hit!';
+        critColor = 'good';
+      }
+    }
+    responseToSlack.response_type = 'in_channel';
+    responseToSlack.text = `Rolled with disadvantage, and got...(${rollResults.join(', ')}) = ${_.min(rollResults) + diceModifier}`;
+    if (critMessage !== null) {
+      responseToSlack.attachments = new Array<SlackResponse.Attachment>(new SlackResponse.Attachment(critColor, critMessage));
+    }
+    return responseToSlack;
+  }
 }

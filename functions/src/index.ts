@@ -15,17 +15,19 @@ export const rollDice = functions.https.onRequest(async (req, res) => {
         slackRes.text = `Auth Failed: broken token`;
         return res.status(418).send(slackRes);
     }
-    if (requestBody.text.includes('advantage')) {
-        const diceModifier = requestBody.text.split('+')[1];
-        const rollResult = RollController.rollAdvantage();
-        const highRoll = _.max(rollResult);
-        const advantageResult = highRoll + diceModifier;
-    }
-    if (requestBody.text.includes('disadvantage')) {
+    if (requestBody.text.includes('dis')) {
         const diceModifier = requestBody.text.split('+')[1];
         const rollResult = RollController.rollAdvantage();
         const lowRoll = _.min(rollResult);
         const advantageResult = lowRoll + diceModifier;
+        return res.status(200).send(RollController.buildDisadvantageResultMessage(slackRes, rollResult, parseInt(diceModifier)));
+    }
+    if (requestBody.text.includes('adv')) {
+        const diceModifier = requestBody.text.split('+')[1];
+        const rollResult = RollController.rollAdvantage();
+        const highRoll = _.max(rollResult);
+        const advantageResult = highRoll + diceModifier;
+        return res.status(200).send(RollController.buildAdvantageResultMessage(slackRes, rollResult, parseInt(diceModifier)));
     }
     const rollParams = RollController.splitWhatToRoll(requestBody.text);
     const validationResult = RollController.validateDiceParams(rollParams.numberOfDice, rollParams.typeOfDice, rollParams.diceModifier, Config.rollRules);

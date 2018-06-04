@@ -24,13 +24,21 @@ exports.rollDice = functions.https.onRequest((req, res) => __awaiter(this, void 
         slackRes.text = `Auth Failed: broken token`;
         return res.status(418).send(slackRes);
     }
+    if (requestBody.text.includes('disadvantage')) {
+        const diceModifier = requestBody.text.split('+')[1];
+        const rollResult = roll_controller_1.RollController.rollAdvantage();
+        const lowRoll = _.min(rollResult);
+        const advantageResult = lowRoll + diceModifier;
+        return res.status(200).send(roll_controller_1.RollController.buildDisadvantageResultMessage(slackRes, rollResult, parseInt(diceModifier)));
+    }
     if (requestBody.text.includes('advantage')) {
         const diceModifier = requestBody.text.split('+')[1];
         const rollResult = roll_controller_1.RollController.rollAdvantage();
         const highRoll = _.max(rollResult);
         const advantageResult = highRoll + diceModifier;
+        return res.status(200).send(roll_controller_1.RollController.buildAdvantageResultMessage(slackRes, rollResult, parseInt(diceModifier)));
     }
-    const rollParams = roll_controller_1.RollController.SplitWhatToRoll(requestBody.text);
+    const rollParams = roll_controller_1.RollController.splitWhatToRoll(requestBody.text);
     const validationResult = roll_controller_1.RollController.validateDiceParams(rollParams.numberOfDice, rollParams.typeOfDice, rollParams.diceModifier, lame_config_1.Config.rollRules);
     if (validationResult.isRollValid === false) {
         slackRes.response_type = 'ephemeral';
