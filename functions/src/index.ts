@@ -16,18 +16,17 @@ export const rollDice = functions.https.onRequest(async (req, res) => {
         return res.status(418).send(slackRes);
     }
     if (requestBody.text.includes('dis')) {
-        const diceModifier = requestBody.text.split('+')[1];
         const rollResult = RollController.rollAdvantage();
-        const lowRoll = _.min(rollResult);
-        const advantageResult = lowRoll + diceModifier;
-        return res.status(200).send(RollController.buildDisadvantageResultMessage(slackRes, rollResult, parseInt(diceModifier)));
+        return res.status(200).send(RollController.buildDisadvantageResultMessage(slackRes, rollResult, parseInt(requestBody.text.split('+')[1])));
     }
     if (requestBody.text.includes('adv')) {
-        const diceModifier = requestBody.text.split('+')[1];
         const rollResult = RollController.rollAdvantage();
-        const highRoll = _.max(rollResult);
-        const advantageResult = highRoll + diceModifier;
-        return res.status(200).send(RollController.buildAdvantageResultMessage(slackRes, rollResult, parseInt(diceModifier)));
+        return res.status(200).send(RollController.buildAdvantageResultMessage(slackRes, rollResult, parseInt(requestBody.text.split('+')[1])));
+    }
+    let curtModifier = 5;
+    if (requestBody.text.includes('c')) {
+        curtModifier = RollController.rollDemBones(1, 15)[0];
+        requestBody.text = requestBody.text.replace('c', 'd');
     }
     const rollParams = RollController.splitWhatToRoll(requestBody.text);
     const validationResult = RollController.validateDiceParams(rollParams.numberOfDice, rollParams.typeOfDice, rollParams.diceModifier, Config.rollRules);
@@ -37,7 +36,7 @@ export const rollDice = functions.https.onRequest(async (req, res) => {
         return res.status(200).send(slackRes);    
     }
     const result = RollController.rollDemBones(rollParams.numberOfDice, rollParams.typeOfDice);
-    return res.status(200).send(RollController.buildResultMessage(slackRes, result, requestBody.text, rollParams.diceModifier));
+    return res.status(200).send(RollController.buildResultMessage(slackRes, result, requestBody.text, curtModifier ? rollParams.diceModifier + curtModifier : rollParams.diceModifier));
 });
 export const rollStat = functions.https.onRequest(async (req, res) => {
     const requestBody = req.body;  

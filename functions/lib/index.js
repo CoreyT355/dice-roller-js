@@ -10,7 +10,6 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 const functions = require("firebase-functions");
 const Slack = require("./models/slack.model");
-const _ = require("lodash");
 const roll_controller_1 = require("./logic/roll.controller");
 const lame_config_1 = require("./lame.config");
 const slackRes = new Slack.Response();
@@ -24,19 +23,18 @@ exports.rollDice = functions.https.onRequest((req, res) => __awaiter(this, void 
         slackRes.text = `Auth Failed: broken token`;
         return res.status(418).send(slackRes);
     }
-    if (requestBody.text.includes('disadvantage')) {
-        const diceModifier = requestBody.text.split('+')[1];
+    if (requestBody.text.includes('dis')) {
         const rollResult = roll_controller_1.RollController.rollAdvantage();
-        const lowRoll = _.min(rollResult);
-        const advantageResult = lowRoll + diceModifier;
-        return res.status(200).send(roll_controller_1.RollController.buildDisadvantageResultMessage(slackRes, rollResult, parseInt(diceModifier)));
+        return res.status(200).send(roll_controller_1.RollController.buildDisadvantageResultMessage(slackRes, rollResult, parseInt(requestBody.text.split('+')[1])));
     }
-    if (requestBody.text.includes('advantage')) {
-        const diceModifier = requestBody.text.split('+')[1];
+    if (requestBody.text.includes('adv')) {
         const rollResult = roll_controller_1.RollController.rollAdvantage();
-        const highRoll = _.max(rollResult);
-        const advantageResult = highRoll + diceModifier;
-        return res.status(200).send(roll_controller_1.RollController.buildAdvantageResultMessage(slackRes, rollResult, parseInt(diceModifier)));
+        return res.status(200).send(roll_controller_1.RollController.buildAdvantageResultMessage(slackRes, rollResult, parseInt(requestBody.text.split('+')[1])));
+    }
+    let curtModifier = 5;
+    if (requestBody.text.includes('c')) {
+        curtModifier = roll_controller_1.RollController.rollDemBones(1, 15)[0];
+        requestBody.text = requestBody.text.replace('c', 'd');
     }
     const rollParams = roll_controller_1.RollController.splitWhatToRoll(requestBody.text);
     const validationResult = roll_controller_1.RollController.validateDiceParams(rollParams.numberOfDice, rollParams.typeOfDice, rollParams.diceModifier, lame_config_1.Config.rollRules);
@@ -46,7 +44,7 @@ exports.rollDice = functions.https.onRequest((req, res) => __awaiter(this, void 
         return res.status(200).send(slackRes);
     }
     const result = roll_controller_1.RollController.rollDemBones(rollParams.numberOfDice, rollParams.typeOfDice);
-    return res.status(200).send(roll_controller_1.RollController.buildResultMessage(slackRes, result, requestBody.text, rollParams.diceModifier));
+    return res.status(200).send(roll_controller_1.RollController.buildResultMessage(slackRes, result, requestBody.text, curtModifier ? rollParams.diceModifier + curtModifier : rollParams.diceModifier));
 }));
 exports.rollStat = functions.https.onRequest((req, res) => __awaiter(this, void 0, void 0, function* () {
     const requestBody = req.body;
