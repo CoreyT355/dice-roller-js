@@ -25,7 +25,7 @@ export class RollController {
     }
     return new ValidationResult(true, ``);
   }
-  public static SplitWhatToRoll(whatToRoll: string): any {
+  public static splitWhatToRoll(whatToRoll: string): any {
     const numberOfDice = parseInt(whatToRoll.split("d")[0]);
     const typeOfDice = parseInt(whatToRoll.split("d")[1].split("+")[0]);
     let diceModifier: number;

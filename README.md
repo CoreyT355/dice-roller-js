@@ -1,5 +1,5 @@
 [![CodeFactor](https://www.codefactor.io/repository/github/coreyt355/dice-roller-js/badge/master)](https://www.codefactor.io/repository/github/coreyt355/dice-roller-js/overview/master)
-
+[ ![Codeship Status for CoreyT355/dice-roller-js](https://app.codeship.com/projects/cebe5510-458a-0136-e00e-4683bca4b997/status?branch=master)(https://app.codeship.com/projects/291939)
 # DiceRollerJS
 
 Simple dice roller built as a Firebase Function. 
@@ -19,16 +19,12 @@ Run `npm run deploy` to deploy to your firebase project
 
 You need the Firebase CLI, and to log in to it.
 
-```
-Give examples
-```
-
 ### Installing
-
+```
 Clone
-Run `npm i`
+Run npm i
 Profit
-
+```
 
 ## Running the tests
 

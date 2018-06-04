@@ -8,7 +8,6 @@ const slackRes = new Slack.Response();
 const allowedTokens = [
     "uTzgipm2SXe415vtiVH4gbUz"
 ];
-
 export const rollDice = functions.https.onRequest(async (req, res) => {
     const requestBody = req.body;
     if (!allowedTokens.find(token => { return token === requestBody.token; })) {
@@ -22,7 +21,13 @@ export const rollDice = functions.https.onRequest(async (req, res) => {
         const highRoll = _.max(rollResult);
         const advantageResult = highRoll + diceModifier;
     }
-    const rollParams = RollController.SplitWhatToRoll(requestBody.text);
+    if (requestBody.text.includes('disadvantage')) {
+        const diceModifier = requestBody.text.split('+')[1];
+        const rollResult = RollController.rollAdvantage();
+        const lowRoll = _.min(rollResult);
+        const advantageResult = lowRoll + diceModifier;
+    }
+    const rollParams = RollController.splitWhatToRoll(requestBody.text);
     const validationResult = RollController.validateDiceParams(rollParams.numberOfDice, rollParams.typeOfDice, rollParams.diceModifier, Config.rollRules);
     if (validationResult.isRollValid === false) {
         slackRes.response_type = 'ephemeral';
@@ -32,7 +37,6 @@ export const rollDice = functions.https.onRequest(async (req, res) => {
     const result = RollController.rollDemBones(rollParams.numberOfDice, rollParams.typeOfDice);
     return res.status(200).send(RollController.buildResultMessage(slackRes, result, requestBody.text, rollParams.diceModifier));
 });
-
 export const rollStat = functions.https.onRequest(async (req, res) => {
     const requestBody = req.body;  
     if (!allowedTokens.find(token => { return token === requestBody.token; })) {
