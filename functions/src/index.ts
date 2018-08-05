@@ -23,7 +23,7 @@ export const rollDice = functions.https.onRequest(async (req, res) => {
         const rollResult = RollController.rollAdvantage();
         return res.status(200).send(RollController.buildAdvantageResultMessage(slackRes, rollResult, parseInt(requestBody.text.split('+')[1])));
     }
-    let curtModifier = 5;
+    let curtModifier = 0;
     if (requestBody.text.includes('c')) {
         curtModifier = RollController.rollDemBones(1, 15)[0];
         requestBody.text = requestBody.text.replace('c', 'd');
